@@ -50,6 +50,7 @@ package com.hurlant.crypto.tls {
 		private var _iStream:ByteArray;
 		private var _oStream:ByteArray;
 		private var _iStream_cursor:uint;
+		private var _flush:Boolean;
 		
 		private var _socket:Socket;
 		private var _config:TLSConfig;
@@ -124,6 +125,10 @@ package com.hurlant.crypto.tls {
 			if (_ready) {
 				_engine.sendApplicationData(_oStream);
 				_oStream.length = 0;
+                if (_flush) {
+                    _socket.flush();
+                    _flush = false;
+                }
 			}
 		}
 		
@@ -228,8 +233,8 @@ package com.hurlant.crypto.tls {
 		}
 		
 		override public function flush():void {
-			commitWrite();
-			_socket.flush();
+            _flush = true;
+            scheduleWrite();
 		}
 		
 		override public function readBoolean():Boolean {
