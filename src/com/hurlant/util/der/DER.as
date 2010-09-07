@@ -157,6 +157,14 @@ package com.hurlant.util.der
 					var ut:UTCTime = new UTCTime(type, len);
 					ut.setUTCTime(der.readMultiByte(len, "US-ASCII"));
 					return ut;
+                case 0x0C: // V_ASN1_UTF8STRING
+                    ps = new PrintableString(type, len);
+                    ps.setString(der.readMultiByte(len, "utf-8"));
+                    return ps;
+                case 0x16: // V_ASN1_IA5STRING
+                    ps = new PrintableString(type, len);
+                    ps.setString(der.readMultiByte(len, "x-IA5"));
+                    return ps;
 				default:
 					throw(new Error("unable to handle DER load, type: "+type));
 					return null;
