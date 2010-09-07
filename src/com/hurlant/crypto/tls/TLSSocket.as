@@ -148,7 +148,6 @@ package com.hurlant.crypto.tls {
 		override public function connect(host:String, port:int):void {
 			init(new Socket, _config, host);
 			_socket.connect(host, port);
-			_engine.start();
 		}
 		
 		public function releaseSocket() : void {
@@ -205,6 +204,12 @@ package com.hurlant.crypto.tls {
 			init(socket, config, host);
 			_engine.start();
 		}
+
+        private function onSocketConnected(evt:Event):void
+        {
+            _engine.start();
+            this.dispatchEvent(evt);
+        }
 		
 		private function init(socket:Socket, config:TLSConfig, host:String):void {
 			_iStream = new ByteArray;
@@ -213,7 +218,7 @@ package com.hurlant.crypto.tls {
 			objectEncoding = ObjectEncoding.DEFAULT;
 			endian = Endian.BIG_ENDIAN;
 			_socket = socket;
-			_socket.addEventListener(Event.CONNECT, dispatchEvent);
+			_socket.addEventListener(Event.CONNECT, onSocketConnected);
 			_socket.addEventListener(IOErrorEvent.IO_ERROR, dispatchEvent);
 			_socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, dispatchEvent);
 			_socket.addEventListener(Event.CLOSE, dispatchEvent);
