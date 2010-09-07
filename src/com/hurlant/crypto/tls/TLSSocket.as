@@ -148,7 +148,7 @@ package com.hurlant.crypto.tls {
 		override public function connect(host:String, port:int):void {
 			init(new Socket, _config, host);
 			_socket.connect(host, port);
-    }
+		}
 		
 		public function releaseSocket() : void {
 			_socket.removeEventListener(Event.CONNECT, onSocketConnected);
@@ -201,12 +201,12 @@ package com.hurlant.crypto.tls {
 			}
 			init(socket, config, host);
 		}
-    
-    private function onSocketConnected(evt:Event):void
-    {
-      _engine.start();
-      this.dispatchEvent(evt);
-    }
+
+        private function onSocketConnected(evt:Event):void
+        {
+            _engine.start();
+            this.dispatchEvent(evt);
+        }
 		
 		private function init(socket:Socket, config:TLSConfig, host:String):void {
 			_iStream = new ByteArray;
