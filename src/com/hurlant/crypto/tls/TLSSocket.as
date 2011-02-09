@@ -184,7 +184,6 @@ package com.hurlant.crypto.tls {
 			_engine.addEventListener(TLSEvent.DATA, onTLSData);
 			_engine.addEventListener(TLSEvent.READY, onTLSReady);
 			_engine.addEventListener(Event.CLOSE, onTLSClose);
-			_engine.addEventListener(ProgressEvent.SOCKET_DATA, function(e:*):void { _socket.flush(); });
 			_socket.addEventListener(ProgressEvent.SOCKET_DATA, _engine.dataAvailable);
 			_engine.addEventListener( TLSEvent.PROMPT_ACCEPT_CERT, onAcceptCert );
 
@@ -224,7 +223,6 @@ package com.hurlant.crypto.tls {
 			_engine.addEventListener( TLSEvent.PROMPT_ACCEPT_CERT, onAcceptCert );
 			_engine.addEventListener(TLSEvent.READY, onTLSReady);
 			_engine.addEventListener(Event.CLOSE, onTLSClose);
-			_engine.addEventListener(ProgressEvent.SOCKET_DATA, function(e:*):void { if(connected) _socket.flush(); });
 			_socket.addEventListener(ProgressEvent.SOCKET_DATA, _engine.dataAvailable);
 
 			_ready = false;
