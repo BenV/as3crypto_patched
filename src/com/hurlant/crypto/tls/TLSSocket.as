@@ -143,11 +143,10 @@ package com.hurlant.crypto.tls {
 		override public function connect(host:String, port:int):void {
 			init(new Socket, _config, host);
 			_socket.connect(host, port);
-			_engine.start();
-		}
+    }
 		
 		public function releaseSocket() : void {
-			_socket.removeEventListener(Event.CONNECT, dispatchEvent);
+			_socket.removeEventListener(Event.CONNECT, onSocketConnected);
 			_socket.removeEventListener(IOErrorEvent.IO_ERROR, dispatchEvent);
 			_socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, dispatchEvent);
 			_socket.removeEventListener(Event.CLOSE, dispatchEvent);
@@ -190,7 +189,6 @@ package com.hurlant.crypto.tls {
 			_engine.addEventListener( TLSEvent.PROMPT_ACCEPT_CERT, onAcceptCert );
 
 			_ready = false;
-			_engine.start();
 		}
 		
 		public function startTLS(socket:Socket, host:String, config:TLSConfig = null):void {
@@ -198,8 +196,13 @@ package com.hurlant.crypto.tls {
 				throw new Error("Cannot STARTTLS on a socket that isn't connected.");
 			}
 			init(socket, config, host);
-			_engine.start();
 		}
+    
+    private function onSocketConnected(evt:Event):void
+    {
+      _engine.start();
+      this.dispatchEvent(evt);
+    }
 		
 		private function init(socket:Socket, config:TLSConfig, host:String):void {
 			_iStream = new ByteArray;
@@ -208,7 +211,7 @@ package com.hurlant.crypto.tls {
 			objectEncoding = ObjectEncoding.DEFAULT;
 			endian = Endian.BIG_ENDIAN;
 			_socket = socket;
-			_socket.addEventListener(Event.CONNECT, dispatchEvent);
+			_socket.addEventListener(Event.CONNECT, onSocketConnected);
 			_socket.addEventListener(IOErrorEvent.IO_ERROR, dispatchEvent);
 			_socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, dispatchEvent);
 			_socket.addEventListener(Event.CLOSE, dispatchEvent);
