@@ -281,15 +281,19 @@ package com.hurlant.math
 			const k:int = 8;
 			t = 0;
 			s = 0;
+			var expResult:int = 0;
 			while (--i >= p) {
 				var x:int = i<value.length?value[i]:0;
 				if (sh == 0) {
 					a[t++] = x;
 				} else if (sh+k > DB) {
-					a[t-1] |= (x&((1<<(DB-sh))-1))<<sh;
-					a[t++] = x>>(DB-sh);
+					expResult = (x&((1<<(DB-sh))-1))<<sh
+					a[t-1] |= expResult;
+					expResult = x>>(DB-sh)
+					a[t++] = expResult;
 				} else {
-					a[t-1] |= x<<sh;
+					expResult = x<<sh
+					a[t-1] |= expResult;
 				}
 				sh += k;
 				if (sh >= DB) sh -= DB;
@@ -374,12 +378,16 @@ package com.hurlant.math
 			var bm:int = (1<<bs)-1;
 			r.a[0] = a[ds]>>bs;
 			var i:int;
+			var expResult:int = 0;
 			for (i=ds+1; i<t; ++i) {
-				r.a[i-ds-1] |= (a[i]&bm)<<cbs;
-				r.a[i-ds] = a[i]>>bs;
+				expResult = (a[i]&bm)<<cbs
+				r.a[i-ds-1] |= expResult;
+				expResult = a[i]>>bs
+				r.a[i-ds] = expResult;
 			}
 			if (bs>0) {
-				r.a[t-ds-1] |= (s&bm)<<cbs;
+				expResult = (s&bm)<<cbs
+				r.a[t-ds-1] |= expResult;
 			}
 			r.t = t-ds;
 			r.clamp();
