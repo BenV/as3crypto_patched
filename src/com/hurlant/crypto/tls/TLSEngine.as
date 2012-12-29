@@ -709,16 +709,18 @@ package com.hurlant.crypto.tls {
 			var len:uint = length;
 			// BIG FAT WARNING: Patch from Arlen Cuss ALA As3crypto group on Google code. 
 			// This addresses data overflow issues when the packet size hits the max length boundary.
-			if (len == 0) len = data.length;  
-			while (len>16384) {
-				rec.position = 0;
-				rec.writeBytes(data, offset, 16384);
+			if (len == 0) len = data.length;
+			var maxSize:uint = 16384;
+			while (len>maxSize) {
+				rec.clear();
+				rec.writeBytes(data, offset, maxSize);
 				rec.position = 0;
 				sendRecord(PROTOCOL_APPLICATION_DATA, rec);
-				offset += 16384;
-				len -= 16384;
+				offset += maxSize;
+				len -= maxSize;
 			}
-			rec.position = 0;
+			
+			rec.clear();
 			rec.writeBytes(data, offset, len);
 			// trace("Data I'm sending..." + Hex.fromArray( data ));
 			rec.position = 0;
