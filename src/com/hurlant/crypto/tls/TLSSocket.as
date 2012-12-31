@@ -104,6 +104,7 @@ package com.hurlant.crypto.tls {
 		
 		private function onTLSReady(event:TLSEvent):void {
 			_ready = true;
+			dispatchEvent(event);
 			scheduleWrite();
 		}
 		
